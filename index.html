@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Country Flags (Full List Online)</title>
+  <title>Country Flags (Embedded List)</title>
   <style>
     body {
       font-family: sans-serif;
@@ -28,38 +28,59 @@
   </style>
 </head>
 <body>
-  <h1>Country Flags (From Internet)</h1>
+  <h1>Country Flags</h1>
   <p>Select a country to see its flag</p>
 
   <select id="country">
-    <option value="">-- Loading countries... --</option>
+    <option value="">-- Choose a country --</option>
   </select>
 
   <div id="flag-container"></div>
 
   <script>
+    const countries = [
+      { name: "Afghanistan", code: "af" }, { name: "Albania", code: "al" },
+      { name: "Algeria", code: "dz" }, { name: "Andorra", code: "ad" },
+      { name: "Angola", code: "ao" }, { name: "Argentina", code: "ar" },
+      { name: "Australia", code: "au" }, { name: "Austria", code: "at" },
+      { name: "Bangladesh", code: "bd" }, { name: "Belgium", code: "be" },
+      { name: "Brazil", code: "br" }, { name: "Canada", code: "ca" },
+      { name: "China", code: "cn" }, { name: "Denmark", code: "dk" },
+      { name: "Egypt", code: "eg" }, { name: "Finland", code: "fi" },
+      { name: "France", code: "fr" }, { name: "Germany", code: "de" },
+      { name: "Greece", code: "gr" }, { name: "India", code: "in" },
+      { name: "Indonesia", code: "id" }, { name: "Iran", code: "ir" },
+      { name: "Iraq", code: "iq" }, { name: "Ireland", code: "ie" },
+      { name: "Israel", code: "il" }, { name: "Italy", code: "it" },
+      { name: "Japan", code: "jp" }, { name: "Kenya", code: "ke" },
+      { name: "Malaysia", code: "my" }, { name: "Mexico", code: "mx" },
+      { name: "Nepal", code: "np" }, { name: "Netherlands", code: "nl" },
+      { name: "New Zealand", code: "nz" }, { name: "Nigeria", code: "ng" },
+      { name: "Norway", code: "no" }, { name: "Pakistan", code: "pk" },
+      { name: "Philippines", code: "ph" }, { name: "Poland", code: "pl" },
+      { name: "Portugal", code: "pt" }, { name: "Qatar", code: "qa" },
+      { name: "Russia", code: "ru" }, { name: "Saudi Arabia", code: "sa" },
+      { name: "Singapore", code: "sg" }, { name: "South Africa", code: "za" },
+      { name: "South Korea", code: "kr" }, { name: "Spain", code: "es" },
+      { name: "Sri Lanka", code: "lk" }, { name: "Sweden", code: "se" },
+      { name: "Switzerland", code: "ch" }, { name: "Thailand", code: "th" },
+      { name: "Turkey", code: "tr" }, { name: "Ukraine", code: "ua" },
+      { name: "United Arab Emirates", code: "ae" },
+      { name: "United Kingdom", code: "gb" },
+      { name: "United States", code: "us" },
+      { name: "Vietnam", code: "vn" }, { name: "Zimbabwe", code: "zw" }
+    ];
+
     const countrySelect = document.getElementById('country');
     const flagContainer = document.getElementById('flag-container');
 
-    // Fetch country list from REST Countries API
-    fetch('https://restcountries.com/v3.1/all')
-      .then(response => response.json())
-      .then(data => {
-        // Sort by common name
-        data.sort((a, b) => a.name.common.localeCompare(b.name.common));
-        countrySelect.innerHTML = '<option value="">-- Choose a country --</option>';
-        data.forEach(country => {
-          if (country.cca2) {
-            const option = document.createElement('option');
-            option.value = country.cca2.toLowerCase();
-            option.textContent = country.name.common;
-            countrySelect.appendChild(option);
-          }
-        });
-      })
-      .catch(() => {
-        countrySelect.innerHTML = '<option value="">Error loading list</option>';
-      });
+    // Populate the dropdown
+    countries.sort((a,b) => a.name.localeCompare(b.name)).forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.code;
+      opt.textContent = c.name;
+      countrySelect.appendChild(opt);
+    });
 
     countrySelect.addEventListener('change', () => {
       const code = countrySelect.value;
