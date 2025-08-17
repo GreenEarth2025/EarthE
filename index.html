@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Country Flags (Online)</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      padding: 20px;
+      text-align: center;
+    }
+    select {
+      padding: 8px;
+      font-size: 16px;
+      margin: 10px;
+    }
+    img {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      max-width: 320px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Country Flags (From Internet)</h1>
+  <p>Select a country to see its flag</p>
+
+  <select id="country">
+    <option value="">--Choose a country--</option>
+    <option value="au">Australia</option>
+    <option value="in">India</option>
+    <option value="us">United States</option>
+    <option value="gb">United Kingdom</option>
+    <option value="jp">Japan</option>
+    <option value="br">Brazil</option>
+    <option value="za">South Africa</option>
+    <option value="fr">France</option>
+    <option value="de">Germany</option>
+    <option value="cn">China</option>
+  </select>
+
+  <div id="flag-container"></div>
+
+  <script>
+    const countrySelect = document.getElementById('country');
+    const flagContainer = document.getElementById('flag-container');
+
+    countrySelect.addEventListener('change', () => {
+      const code = countrySelect.value;
+      if (code) {
+        // FlagCDN uses lowercase ISO country codes
+        const imgUrl = `https://flagcdn.com/w320/${code}.png`;
+        flagContainer.innerHTML = `<img src="${imgUrl}" alt="Flag of ${countrySelect.options[countrySelect.selectedIndex].text}">`;
+      } else {
+        flagContainer.innerHTML = '';
+      }
+    });
+  </script>
+</body>
+</html>
