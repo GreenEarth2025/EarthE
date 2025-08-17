@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Country Flags (Online)</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Country Flags (Full List Online)</title>
   <style>
     body {
       font-family: sans-serif;
@@ -16,6 +16,7 @@
       padding: 8px;
       font-size: 16px;
       margin: 10px;
+      min-width: 260px;
     }
     img {
       margin-top: 20px;
@@ -31,17 +32,7 @@
   <p>Select a country to see its flag</p>
 
   <select id="country">
-    <option value="">--Choose a country--</option>
-    <option value="au">Australia</option>
-    <option value="in">India</option>
-    <option value="us">United States</option>
-    <option value="gb">United Kingdom</option>
-    <option value="jp">Japan</option>
-    <option value="br">Brazil</option>
-    <option value="za">South Africa</option>
-    <option value="fr">France</option>
-    <option value="de">Germany</option>
-    <option value="cn">China</option>
+    <option value="">-- Loading countries... --</option>
   </select>
 
   <div id="flag-container"></div>
@@ -50,12 +41,32 @@
     const countrySelect = document.getElementById('country');
     const flagContainer = document.getElementById('flag-container');
 
+    // Fetch country list from REST Countries API
+    fetch('https://restcountries.com/v3.1/all')
+      .then(response => response.json())
+      .then(data => {
+        // Sort by common name
+        data.sort((a, b) => a.name.common.localeCompare(b.name.common));
+        countrySelect.innerHTML = '<option value="">-- Choose a country --</option>';
+        data.forEach(country => {
+          if (country.cca2) {
+            const option = document.createElement('option');
+            option.value = country.cca2.toLowerCase();
+            option.textContent = country.name.common;
+            countrySelect.appendChild(option);
+          }
+        });
+      })
+      .catch(() => {
+        countrySelect.innerHTML = '<option value="">Error loading list</option>';
+      });
+
     countrySelect.addEventListener('change', () => {
       const code = countrySelect.value;
+      const name = countrySelect.options[countrySelect.selectedIndex]?.text || '';
       if (code) {
-        // FlagCDN uses lowercase ISO country codes
         const imgUrl = `https://flagcdn.com/w320/${code}.png`;
-        flagContainer.innerHTML = `<img src="${imgUrl}" alt="Flag of ${countrySelect.options[countrySelect.selectedIndex].text}">`;
+        flagContainer.innerHTML = `<img src="${imgUrl}" alt="Flag of ${name}">`;
       } else {
         flagContainer.innerHTML = '';
       }
